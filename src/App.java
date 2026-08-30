@@ -86,22 +86,60 @@ public class App {
                         }else{
                             System.out.println("[ERRO] Nenhuma conta ativa");
                         }
+
                     }
-                    case 3 -> {}
-                    case 4 -> {}
+                    case 3 -> {
+                        if (!contaAtiva) {
+                            System.out.println("[ERRO] Abra uma conta antes de depositar.");
+
+                        } else {
+                            System.out.print("Valor do depósito: R$ ");
+                            double valor = Double.parseDouble(entrada.nextLine());
+
+                            while (valor <= 0) {
+                                System.out.print("Valor inválido! Digite um valor maior que zero: R$ ");
+                                valor = Double.parseDouble(entrada.nextLine());
+                            }
+
+                            saldo += valor;
+                            System.out.printf("-> Depósito efetuado. Novo saldo: R$ %.2f%n", saldo);
+                        }
+
+                    }
+
+                    case 4 -> {
+                        if (!contaAtiva) {
+                            System.out.println("[ERRO] Abra uma conta antes de sacar.");
+
+                        } else {
+                            System.out.print("Valor do saque: R$ ");
+                            double valor = Double.parseDouble(entrada.nextLine());
+
+                            if (valor > 0 && valor <= saldo) {
+                                saldo -= valor;
+                                System.out.printf("-> Saque efetuado. Novo saldo: R$ %.2f%n", saldo);
+                            } else {
+                                System.out.println("[RECUSADO] Saldo insuficiente ou valor inválido.");
+                            }
+
+                        }
+
+                    }
                     case 5 -> {
                         System.out.println("Encerrando o sistema.");
                     }
+
                     default -> {
                         System.out.println("Opção invalida, escolha novamente.");
                     }
+
                 }
 
             }while (opcao != 5);
-
         }
 
         entrada.close();
 
     }
+
 }
