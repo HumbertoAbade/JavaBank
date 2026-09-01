@@ -1,145 +1,176 @@
+import com.javabank.modelo.Conta; // Importa a classe Conta criada no Módulo 3
 import java.util.Scanner;
 
 public class App {
-    // Atalho > PSVM + TAB > main()
     public static void main(String[] args) {
-
-        // Atalho > SOUT + TAB > println
-        System.out.println("JAVABANK - TERMINAL DO CAIXA");
-
-        // Variáveis
-        Scanner entrada = new Scanner (System.in);
-        // boolean para validar o acesso do usuário (dois estados logado / deslogado)
+        Scanner teclado = new Scanner(System.in);
+        final int PIN_OPERADOR = 8888;
         boolean operadorAutenticado = false;
 
-        // final = constante, não pode ser alterado (boa prática tudo em caps lock)
-        final int SENHA_OPERADOR = 8888;
+        System.out.println("=== JAVABANK 2026.2 - TERMINAL DO CAIXA ===");
 
+        // Autenticação por PIN (Estrutura do Módulo 2)
+        for (int tentativa = 1; tentativa <= 3; tentativa++) {
+            System.out.print("Informe o PIN do Operador (Tentativa " + tentativa + " de 3): ");
+            int pinDigitado = Integer.parseInt(teclado.nextLine());
 
-        // For - para fazer uma quantidade de tentativas
-        for (int tentativa =1; tentativa <=3; tentativa ++){
-            System.out.println("Informe a sua senha: ");
-            // entrada de senha pelo usuário - pega como texto e converte para número
-            int senha = Integer.parseInt(entrada.nextLine());
-
-            // If + Else para validar o acesso
-            if(senha == SENHA_OPERADOR){
-                System.out.println("[CONECTADO] Bem-vindo!");
+            if (pinDigitado == PIN_OPERADOR) {
                 operadorAutenticado = true;
-                // Para o loop quando entra
                 break;
-            }else{
-                System.out.println("[SENHA INCORRETA] Tente novamente.");
+            } else {
+                System.out.println("[ALERTA] PIN incorreto!");
             }
-
         }
 
-        // Mensagem após três tentativas incorretas
-        if(operadorAutenticado == false){
-            System.out.println("[BLOQUEIO] Limite de tentativas excedidas.");
+        // Execução do Terminal com Orientação a Objetos (Módulo 3)
+        if (operadorAutenticado) {
+            System.out.println("\n[SESSÃO INICIADA] Bem-vindo, Operador!");
 
-        // Conta logada
-        }else{
-            int numeroConta = 0;
-            String titular = "";
-            double saldo = 0;
-            boolean contaAtiva = false;
-            int opcao = 0;
+            // Variáveis de referência para guardar os Objetos de Conta
+            Conta conta1 = null;
+            Conta conta2 = null;
 
-            // Menu
+            int opcao;
             do {
-                System.out.println("Escolha uma opção: ");
-                System.out.println("1 - Abrir conta");
-                System.out.println("2 - Consultar saldo");
-                System.out.println("3 - Realizar depósito");
-                System.out.println("4 - Realizar saque");
-                System.out.println("5 - Sair");
-                System.out.println("Selecione a opção");
-                opcao = Integer.parseInt(entrada.nextLine());
+                System.out.println("\n--- OPERAÇÕES DO TERMINAL ---");
+                System.out.println("1 - Criar/Abrir Conta de Cliente");
+                System.out.println("2 - Consultar Saldo");
+                System.out.println("3 - Realizar Depósito");
+                System.out.println("4 - Realizar Saque");
+                System.out.println("5 - Realizar Transferência");
+                System.out.println("6 - Encerrar Caixa");
+                System.out.print("Selecione a operação: ");
+                opcao = Integer.parseInt(teclado.nextLine());
 
-                switch (opcao){
-                    case 1 -> {
-                        System.out.println("Informe o número da conta: ");
-                        numeroConta = Integer.parseInt(entrada.nextLine());
-                        System.out.println("Informe o titular da conta: ");
-                        titular = entrada.nextLine();
-                        System.out.println("Informe o saldo inicial: ");
-                        saldo = Integer.parseInt(entrada.nextLine());
+                // Estrutura do switch tradicional
+                switch (opcao) {
+                    case 1:
+                        System.out.println("\n--- ABERTURA DE CONTA ---");
+                        System.out.print("Informe o número da nova conta: ");
+                        int numero = Integer.parseInt(teclado.nextLine());
 
-                        while (saldo < 0){
-                            System.out.println("O saldo não deve ser negativo.");
-                            System.out.println("Infome o saldo inicial: ");
-                            saldo = Integer.parseInt(entrada.nextLine());
-                        }
+                        System.out.print("Informe o nome do titular: ");
+                        String titular = teclado.nextLine();
 
-                        contaAtiva = true;
-                        System.out.println("Conta criada com sucesso");
-                    }
-                    case 2 -> {
-                        if(contaAtiva == true){
-                            //System.out.println("Conta: " + numeroConta +
-                            //                    "Titular " + titular +
-                            //                    "Saldo atual: R$" + saldo);
-                            System.out.printf("Conta: %d / Titular: %s / Saldo atual: R$ %.2f \n",
-                                    numeroConta, titular, saldo);
+                        System.out.print("Informe o depósito inicial: R$ ");
+                        double depositoInicial = Double.parseDouble(teclado.nextLine());
 
-                        }else{
-                            System.out.println("[ERRO] Nenhuma conta ativa");
-                        }
-
-                    }
-                    case 3 -> {
-                        if (!contaAtiva) {
-                            System.out.println("[ERRO] Abra uma conta antes de depositar.");
-
+                        // Instanciação e alocação da nova Conta nos espaços disponíveis
+                        if (conta1 == null) {
+                            conta1 = new Conta(numero, titular, depositoInicial);
+                            System.out.println("-> Conta 1 criada com sucesso!");
+                        } else if (conta2 == null) {
+                            conta2 = new Conta(numero, titular, depositoInicial);
+                            System.out.println("-> Conta 2 criada com sucesso!");
                         } else {
-                            System.out.print("Valor do depósito: R$ ");
-                            double valor = Double.parseDouble(entrada.nextLine());
+                            System.out.println("[ALERTA] O limite de contas no terminal (2) foi atingido.");
+                        }
+                        break;
 
-                            while (valor <= 0) {
-                                System.out.print("Valor inválido! Digite um valor maior que zero: R$ ");
-                                valor = Double.parseDouble(entrada.nextLine());
+                    case 2:
+                        System.out.println("\n--- CONSULTA DE SALDO ---");
+                        if (conta1 == null && conta2 == null) {
+                            System.out.println("[ERRO] Nenhuma conta ativa no momento.");
+                        } else {
+                            if (conta1 != null) {
+                                System.out.printf("Conta: %d | Titular: %s | Saldo: R$ %.2f%n",
+                                        conta1.getNumero(), conta1.getTitular(), conta1.getSaldo());
                             }
-
-                            saldo += valor;
-                            System.out.printf("-> Depósito efetuado. Novo saldo: R$ %.2f%n", saldo);
+                            if (conta2 != null) {
+                                System.out.printf("Conta: %d | Titular: %s | Saldo: R$ %.2f%n",
+                                        conta2.getNumero(), conta2.getTitular(), conta2.getSaldo());
+                            }
                         }
+                        break;
 
-                    }
+                    case 3:
+                        System.out.println("\n--- REALIZAR DEPÓSITO ---");
+                        System.out.print("Informe o número da conta destino: ");
+                        int numDep = Integer.parseInt(teclado.nextLine());
 
-                    case 4 -> {
-                        if (!contaAtiva) {
-                            System.out.println("[ERRO] Abra uma conta antes de sacar.");
+                        // Identifica qual conta deve receber o depósito
+                        Conta alvoDep = (conta1 != null && conta1.getNumero() == numDep) ? conta1 :
+                                (conta2 != null && conta2.getNumero() == numDep) ? conta2 : null;
 
+                        if (alvoDep != null) {
+                            System.out.print("Valor do depósito: R$ ");
+                            double valor = Double.parseDouble(teclado.nextLine());
+
+                            if (alvoDep.depositar(valor)) {
+                                System.out.printf("-> Depósito efetuado com sucesso. Novo saldo: R$ %.2f%n", alvoDep.getSaldo());
+                            } else {
+                                System.out.println("[ERRO] Valor inválido! O valor deve ser maior que zero.");
+                            }
                         } else {
-                            System.out.print("Valor do saque: R$ ");
-                            double valor = Double.parseDouble(entrada.nextLine());
+                            System.out.println("[ERRO] Conta não encontrada.");
+                        }
+                        break;
 
-                            if (valor > 0 && valor <= saldo) {
-                                saldo -= valor;
-                                System.out.printf("-> Saque efetuado. Novo saldo: R$ %.2f%n", saldo);
+                    case 4:
+                        System.out.println("\n--- REALIZAR SAQUE ---");
+                        System.out.print("Informe o número da conta: ");
+                        int numSaq = Integer.parseInt(teclado.nextLine());
+
+                        Conta alvoSaq = (conta1 != null && conta1.getNumero() == numSaq) ? conta1 :
+                                (conta2 != null && conta2.getNumero() == numSaq) ? conta2 : null;
+
+                        if (alvoSaq != null) {
+                            System.out.print("Valor do saque: R$ ");
+                            double valor = Double.parseDouble(teclado.nextLine());
+
+                            if (alvoSaq.sacar(valor)) {
+                                System.out.printf("-> Saque efetuado com sucesso. Novo saldo: R$ %.2f%n", alvoSaq.getSaldo());
                             } else {
                                 System.out.println("[RECUSADO] Saldo insuficiente ou valor inválido.");
                             }
-
+                        } else {
+                            System.out.println("[ERRO] Conta não encontrada.");
                         }
+                        break;
 
-                    }
-                    case 5 -> {
-                        System.out.println("Encerrando o sistema.");
-                    }
+                    case 5:
+                        System.out.println("\n--- REALIZAR TRANSFERÊNCIA ---");
+                        if (conta1 == null || conta2 == null) {
+                            System.out.println("[ERRO] É necessário cadastrar pelo menos 2 contas para realizar transferências.");
+                        } else {
+                            System.out.print("Informe o número da conta de ORIGEM: ");
+                            int numOrigem = Integer.parseInt(teclado.nextLine());
 
-                    default -> {
-                        System.out.println("Opção invalida, escolha novamente.");
-                    }
+                            Conta origem = (conta1.getNumero() == numOrigem) ? conta1 :
+                                    (conta2.getNumero() == numOrigem) ? conta2 : null;
 
+                            // A conta destino será automaticamente a outra conta cadastrada
+                            Conta destino = (origem == conta1) ? conta2 : conta1;
+
+                            if (origem != null) {
+                                System.out.print("Valor da transferência: R$ ");
+                                double valor = Double.parseDouble(teclado.nextLine());
+
+                                if (origem.transferir(valor, destino)) {
+                                    System.out.println("-> Transferência efetuada com sucesso!");
+                                } else {
+                                    System.out.println("[RECUSADO] Saldo insuficiente ou valor inválido.");
+                                }
+                            } else {
+                                System.out.println("[ERRO] Conta de origem não encontrada.");
+                            }
+                        }
+                        break;
+
+                    case 6:
+                        System.out.println("\n[FECHAMENTO] Encerrando expediente do caixa...");
+                        break;
+
+                    default:
+                        System.out.println("Opção inválida! Tente novamente.");
+                        break;
                 }
+            } while (opcao != 6);
 
-            }while (opcao != 5);
+        } else {
+            System.out.println("\n[BLOQUEIO] Limite de tentativas do PIN excedido. Caixa bloqueado!");
         }
 
-        entrada.close();
-
+        teclado.close();
     }
-
 }
