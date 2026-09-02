@@ -1,4 +1,4 @@
-import com.javabank.modelo.Conta; // Importa a classe Conta criada no Módulo 3
+import com.javabank.modelo.Conta; // Importa a classe Conta
 import java.util.Scanner;
 
 public class App {
@@ -9,7 +9,7 @@ public class App {
 
         System.out.println("=== JAVABANK 2026.2 - TERMINAL DO CAIXA ===");
 
-        // Autenticação por PIN (Estrutura do Módulo 2)
+        // Autenticação por PIN
         for (int tentativa = 1; tentativa <= 3; tentativa++) {
             System.out.print("Informe o PIN do Operador (Tentativa " + tentativa + " de 3): ");
             int pinDigitado = Integer.parseInt(teclado.nextLine());
@@ -22,7 +22,7 @@ public class App {
             }
         }
 
-        // Execução do Terminal com Orientação a Objetos (Módulo 3)
+        // Execução do Terminal com Orientação a Objetos
         if (operadorAutenticado) {
             System.out.println("\n[SESSÃO INICIADA] Bem-vindo, Operador!");
 
@@ -33,7 +33,7 @@ public class App {
             int opcao;
             do {
                 System.out.println("\n--- OPERAÇÕES DO TERMINAL ---");
-                System.out.println("1 - Criar/Abrir Conta de Cliente");
+                System.out.println("1 - Abrir Conta de Cliente");
                 System.out.println("2 - Consultar Saldo");
                 System.out.println("3 - Realizar Depósito");
                 System.out.println("4 - Realizar Saque");
@@ -46,24 +46,76 @@ public class App {
                 switch (opcao) {
                     case 1:
                         System.out.println("\n--- ABERTURA DE CONTA ---");
-                        System.out.print("Informe o número da nova conta: ");
-                        int numero = Integer.parseInt(teclado.nextLine());
 
-                        System.out.print("Informe o nome do titular: ");
-                        String titular = teclado.nextLine();
+                        // 1. Validação do Número da Conta
+                        int numero = 0;
+                        boolean numeroValido = false;
 
-                        System.out.print("Informe o depósito inicial: R$ ");
-                        double depositoInicial = Double.parseDouble(teclado.nextLine());
+                        while (!numeroValido) {
+                            System.out.print("Informe o número da nova conta: ");
+                            String entrada = teclado.nextLine().trim();
+
+                            try {
+                                int numeroInformado = Integer.parseInt(entrada);
+
+                                // Verifica se o número informado já pertence à conta1 ou conta2
+                                boolean jaExisteConta1 = (conta1 != null && conta1.getNumero() == numeroInformado);
+                                boolean jaExisteConta2 = (conta2 != null && conta2.getNumero() == numeroInformado);
+
+                                if (jaExisteConta1 || jaExisteConta2) {
+                                    System.out.println("[ERRO] Já existe uma conta cadastrada com esse número. Tente outro.\n");
+                                } else if (numeroInformado <= 0) {
+                                    System.out.println("[ERRO] O número da conta deve ser maior que zero.\n");
+                                } else {
+                                    numero = numeroInformado;
+                                    numeroValido = true; // Número é válido e único
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("[ERRO] Entrada inválida. Por favor, digite um número inteiro válido.\n");
+                            }
+                        }
+
+                        // 2. Validação do Nome do Titular
+                        String titular = "";
+                        while (titular.trim().length() < 5) {
+                            System.out.print("Informe o nome do titular (mínimo 5 caracteres): ");
+                            titular = teclado.nextLine().trim();
+
+                            if (titular.trim().length() < 5) {
+                                System.out.println("[ERRO] O nome do titular deve ter pelo menos 5 caracteres.\n");
+                            }
+                        }
+
+                        // 3. Validação do Depósito Inicial
+                        double depositoInicial = 0.0;
+                        boolean depositoValido = false;
+
+                        while (!depositoValido) {
+                            System.out.print("Informe o depósito inicial: R$ ");
+                            String entrada = teclado.nextLine().trim();
+
+                            try {
+                                depositoInicial = Double.parseDouble(entrada);
+
+                                if (depositoInicial < 0) {
+                                    System.out.println("[ERRO] O valor do depósito não pode ser negativo.\n");
+                                } else {
+                                    depositoValido = true;
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("[ERRO] Entrada inválida. Por favor, digite um valor numérico válido (ex: 150.00).\n");
+                            }
+                        }
 
                         // Instanciação e alocação da nova Conta nos espaços disponíveis
                         if (conta1 == null) {
                             conta1 = new Conta(numero, titular, depositoInicial);
-                            System.out.println("-> Conta 1 criada com sucesso!");
+                            System.out.println("\n-> Conta 1 criada com sucesso!");
                         } else if (conta2 == null) {
                             conta2 = new Conta(numero, titular, depositoInicial);
-                            System.out.println("-> Conta 2 criada com sucesso!");
+                            System.out.println("\n-> Conta 2 criada com sucesso!");
                         } else {
-                            System.out.println("[ALERTA] O limite de contas no terminal (2) foi atingido.");
+                            System.out.println("\n[ALERTA] O limite de contas no terminal (2) foi atingido.");
                         }
                         break;
 
