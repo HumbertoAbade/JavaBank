@@ -1,7 +1,9 @@
 import com.javabank.modelo.Conta; // Importa a classe Conta
 import java.util.Scanner;
 
-public class App {
+public class
+
+App {
     public static void main(String[] args) {
         Scanner teclado = new Scanner(System.in);
         final int PIN_OPERADOR = 8888;

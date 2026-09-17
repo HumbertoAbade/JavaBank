@@ -1,12 +1,10 @@
 package com.javabank.modelo;
 
 public class Conta {
-    //Encapsulamento de variáveis com private (apenas a própria classe tem acesso aos membros)
-    private int numero;
-    private String titular;
-    private double saldo;
 
-    //This > aponta para a própria classe
+    protected int numero;
+    protected String titular;
+    protected double saldo;
 
     public String getTitular() {
         return this.titular;
@@ -20,11 +18,12 @@ public class Conta {
         return this.saldo;
     }
 
-    public Conta(int numero, String titular, double saldoInicial) {
+    public Conta(int numero, String titular, double saldo) {
         this.numero = numero;
         this.titular = titular;
-        if (saldoInicial >= 0) {
-            this.saldo = saldoInicial;
+        this.saldo = saldo;
+        if (saldo >= 0) {
+            this.saldo = saldo;
         } else {
             this.saldo = 0.0;
         }
