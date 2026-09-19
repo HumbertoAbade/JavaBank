@@ -12,12 +12,12 @@ public class TesteHeranca {
 
         System.out.println("Titular: " + cc1.getTitular());
         System.out.println("Saldo: " + cc1.getSaldo());
-        System.out.println("Limite: " + cc1.getLimite());
+        System.out.println("Limite: " + cc1.getLimiteEspecial());
         System.out.println();
         System.out.println("Titular: " + cp1.getTitular());
         System.out.println("Saldo: " + cp1.getSaldo());
-        System.out.println("Limite: " + cp1.getTaxaJuros() + "%");
-        System.out.println("Redimento " + cp1.getCalcularRendimento());
+        System.out.println("Taxa de juros: " + cp1.getTaxaRendimento() + "%");
+        System.out.println("Rendimento: " + cp1.renderJuros());
     }
 
 }

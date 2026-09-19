@@ -1,41 +1,17 @@
 package com.javabank.modelo;
 
 public class Conta {
+    private int numero;
+    private String titular;
+    protected double saldo; // protected para permitir acesso pelas subclasses
 
-    protected int numero;
-    protected String titular;
-    protected double saldo;
-
-    public String getTitular() {
-        return this.titular;
-    }
-
-    public int getNumero() {
-        return this.numero;
-    }
-
-    public double getSaldo() {
-        return this.saldo;
-    }
-
-    public Conta(int numero, String titular, double saldo) {
+    public Conta(int numero, String titular, double saldoInicial) {
         this.numero = numero;
         this.titular = titular;
-        this.saldo = saldo;
-        if (saldo >= 0) {
-            this.saldo = saldo;
+        if (saldoInicial >= 0) {
+            this.saldo = saldoInicial;
         } else {
             this.saldo = 0.0;
-        }
-    }
-
-    public boolean setTitular(String titular) {
-        if (titular != null && titular.trim().length() >= 5) {
-            this.titular = titular;
-            return true;
-        } else {
-            System.out.println("O nome deve possuir pelo menos 5 caracteres");
-            return false;
         }
     }
 
@@ -63,4 +39,25 @@ public class Conta {
         return false;
     }
 
+    public double getSaldo() {
+        return this.saldo;
+    }
+
+    public int getNumero() {
+        return this.numero;
+    }
+
+    public String getTitular() {
+        return this.titular;
+    }
+
+    public boolean setTitular(String titular) {
+        if (titular != null && titular.trim().length() >= 5) {
+            this.titular = titular;
+            return true;
+        } else {
+            System.out.println("O nome deve possuir pelo menos 5 caracteres");
+            return false;
+        }
+    }
 }
