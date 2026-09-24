@@ -14,7 +14,6 @@ public class App {
 
         System.out.println("=== JAVABANK 2026.2 - TERMINAL DO CAIXA ===");
 
-        // Autenticação do Operador
         while (tentativa <= 3) {
             System.out.print("Informe o PIN do Operador (Tentativa " + tentativa + " de 3): ");
             int pinDigitado = Integer.parseInt(teclado.nextLine());
@@ -42,7 +41,7 @@ public class App {
         while (opcao != 7) { // Encerramento na opção 7
             System.out.println("\n--- OPERAÇÕES DO TERMINAL ---");
             System.out.println("1 - Abrir Conta de Cliente");
-            System.out.println("2 - Consultar Saldo");
+            System.out.println("2 - Consultar Dados da Conta");
             System.out.println("3 - Realizar Depósito");
             System.out.println("4 - Realizar Saque");
             System.out.println("5 - Realizar Transferência");
@@ -65,7 +64,6 @@ public class App {
                         break;
                     }
 
-                    // ETAPA 1: Seleção de Modalidade no Cadastro
                     System.out.println("Selecione o tipo de conta:");
                     System.out.println("1 - Conta Corrente");
                     System.out.println("2 - Conta Poupança");
@@ -155,34 +153,43 @@ public class App {
                     break;
 
                 case 2:
-                    // ETAPA 2: Exibição Detalhada na Consulta (usando instanceof diretamente no main)
-                    System.out.println("\n--- CONSULTA DE SALDO ---");
+
+                    System.out.println("\n--- CONSULTAR DADOS DA CONTA ---");
                     if (conta1 == null && conta2 == null) {
                         System.out.println("[ERRO] Nenhuma conta ativa no momento.");
                     } else {
-                        if (conta1 != null) {
-                            if (conta1 instanceof Corrente cc) {
-                                System.out.printf("Conta: %d [CORRENTE] | Titular: %s | Saldo: R$ %.2f | Limite Especial: R$ %.2f%n",
-                                        cc.getNumero(), cc.getTitular(), cc.getSaldo(), cc.getLimiteEspecial());
-                            } else if (conta1 instanceof Poupanca cp) {
-                                System.out.printf("Conta: %d [POUPANÇA] | Titular: %s | Saldo: R$ %.2f | Taxa Rendimento: %.2f%%%n",
-                                        cp.getNumero(), cp.getTitular(), cp.getSaldo(), cp.getTaxaRendimento() * 100);
-                            }
+                        System.out.print("Informe o número da conta que deseja consultar: ");
+                        int numConsulta = 0;
+                        try {
+                            numConsulta = Integer.parseInt(teclado.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("[ERRO] Digite uma conta válida.");
+                            break;
                         }
 
-                        if (conta2 != null) {
-                            if (conta2 instanceof Corrente cc) {
+                        Conta contaEncontrada = null;
+                        if (conta1 != null && conta1.getNumero() == numConsulta) {
+                            contaEncontrada = conta1;
+                        } else if (conta2 != null && conta2.getNumero() == numConsulta) {
+                            contaEncontrada = conta2;
+                        }
+
+                        if (contaEncontrada != null) {
+                            if (contaEncontrada instanceof Corrente cc) {
                                 System.out.printf("Conta: %d [CORRENTE] | Titular: %s | Saldo: R$ %.2f | Limite Especial: R$ %.2f%n",
                                         cc.getNumero(), cc.getTitular(), cc.getSaldo(), cc.getLimiteEspecial());
-                            } else if (conta2 instanceof Poupanca cp) {
+                            } else if (contaEncontrada instanceof Poupanca cp) {
                                 System.out.printf("Conta: %d [POUPANÇA] | Titular: %s | Saldo: R$ %.2f | Taxa Rendimento: %.2f%%%n",
                                         cp.getNumero(), cp.getTitular(), cp.getSaldo(), cp.getTaxaRendimento() * 100);
                             }
+                        } else {
+                            System.out.println("[ERRO] Conta não encontrada.");
                         }
                     }
                     break;
 
                 case 3:
+
                     System.out.println("\n--- REALIZAR DEPÓSITO ---");
                     System.out.print("Informe o número da conta destino: ");
                     int numDep = Integer.parseInt(teclado.nextLine());
@@ -258,7 +265,7 @@ public class App {
                     break;
 
                 case 6:
-                    // ETAPA 3: Aplicar Rendimento (Poupança)
+
                     System.out.println("\n--- APLICAR RENDIMENTO (POUPANÇA) ---");
                     System.out.print("Informe o número da conta poupança: ");
                     int numPoup = Integer.parseInt(teclado.nextLine());
